@@ -1,6 +1,6 @@
 {
-  "name": "PikCode",
-  "short_name": "PikCode",
+  "name": "ImgThemer",
+  "short_name": "ImgThemer",
   "icons": [
     {
       "src": "/favicons/web-app-manifest-192x192.png",
@@ -15,7 +15,8 @@
       "purpose": "maskable"
     }
   ],
-  "theme_color": "#ffffff",
+  "theme_color": "#00aa33",
   "background_color": "#ffffff",
   "display": "standalone"
 }
+

@@ -3,7 +3,7 @@ import { getCollection } from 'astro:content';
 import Post from '@components/Post.astro';
 import config from 'project-config.ts';
 
-const blogposts = config.modules.blog ? await getCollection('blogposts') : null;
+const blogposts = config.modules.blog.enabled ? await getCollection('blogposts') : null;
 if (!blogposts) return;
 const latestPosts = blogposts
   .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())

@@ -1,6 +1,7 @@
 ---
 import { Image } from 'astro:assets';
 import IconBookmarkCheck from '~icons/material-symbols/bookmark-check';
+import Chevron from '~icons/lucide/chevron-down';
 import type { ImageMetadata } from 'astro';
 
 interface Props {
@@ -32,6 +33,40 @@ const {
 }: Props = Astro.props;
 ---
 
+<script>
+  const uploadBtn = document.querySelector('.upload-btn');
+  const fileInput = document.getElementById('fileInput');
+  let originalFile;
+  const imgWrapper = document.querySelector('.img-wrapper');
+
+  uploadBtn?.addEventListener('click', (e) => {
+    e.preventDefault();
+    fileInput?.click();
+  });
+
+  fileInput?.addEventListener('change', (event) => {
+    const target = event.target;
+    if (!(target instanceof HTMLInputElement) || !imgWrapper) return;
+
+    const file = target.files?.[0];
+    originalFile = target.files?.[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const readerTarget = e.target;
+      if (
+        readerTarget instanceof FileReader &&
+        readerTarget.result &&
+        imgWrapper
+      ) {
+        imgWrapper.innerHTML = `<img src="${readerTarget.result}" alt="Uploaded Image" style="max-width: 100%; border-radius: 8px;" />`;
+      }
+    };
+    reader.readAsDataURL(file);
+  });
+</script>
+
 <section id="home" class="hero">
   <div class={`content${heroImgSide === 'left' ? ' img-left' : ''}`}>
     {bgPattern && <div class="bgPattern" />}
@@ -53,12 +88,15 @@ const {
 
       {
         (ctaText || secondaryCtaText) && (
-          <div class="btn-container">
-            {ctaText && <a class="primary-btn">{ctaText}</a>}
+          <form class="btn-container">
+            {ctaText && (
+              <button class="primary-btn upload-btn">{ctaText}</button>
+            )}
             {secondaryCtaText && (
               <a class="secondary-btn">{secondaryCtaText}</a>
             )}
-          </div>
+            <input type="file" id="fileInput" style="display:none" />
+          </form>
         )
       }
     </div>
@@ -70,6 +108,22 @@ const {
         </div>
       )
     }
+
+    <div class="result-container">
+      <h3>Original Preview</h3>
+      <div class="original img-wrapper"></div>
+      <h3>Modified Preview</h3>
+      <div class="select-container">
+        <select name="theme" id="theme">
+          <option value="gruvbox">Gruvbox</option>
+          <option value="solarized">Solarized</option>
+          <option value="dracula">Dracula</option>
+          <option value="tokyonight">TokyoNight</option>
+        </select>
+        <Chevron />
+      </div>
+      <div class="modified img-wrapper"></div>
+    </div>
   </div>
 
   {
@@ -87,8 +141,6 @@ const {
     display: flex;
     align-items: stretch;
     justify-content: center;
-    min-height: calc(100vh - var(--header-height));
-    min-height: calc(100svh - var(--header-height));
     padding: 0;
     max-width: none;
 
@@ -98,7 +150,6 @@ const {
       display: flex;
       justify-content: space-between;
       gap: 100px;
-      align-items: center;
       padding: var(--section-padding);
       max-width: var(--max-width);
 
@@ -156,9 +207,9 @@ const {
         text-align: var(--textAlign);
         max-width: 1000px;
 
-        @include view-tablet-s {
-          order: 2;
-        }
+        /* @include view-tablet-s { */
+        /*   order: 2; */
+        /* } */
 
         .eyebrow {
           display: flex;
@@ -198,6 +249,61 @@ const {
           margin-top: 3rem;
           display: flex;
           gap: 1rem;
+
+          label {
+            cursor: pointer;
+          }
+        }
+      }
+
+      .result-container {
+        z-index: 3;
+        flex: 1 1 40%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+
+        .img-wrapper {
+          background-color: var(--background);
+          margin: 2em;
+          border: 2px solid var(--border-color);
+          border-radius: 8px;
+          width: 100%;
+          box-shadow: 0 4px 10px #00000016;
+          overflow: hidden;
+
+          img {
+            width: 100%;
+            height: auto;
+            object-fit: contain;
+            object-position: center;
+          }
+
+          &:empty {
+            aspect-ratio: 16/9;
+          }
+        }
+
+        .select-container {
+          width: 100%;
+          max-width: 300px;
+          display: flex;
+          align-items: center;
+          border-bottom: 2px solid var(--primary);
+          padding-right: 6px;
+          background-color: var(--background);
+
+          select {
+            width: 100%;
+            appearance: none;
+            background: transparent;
+            border: none;
+            padding: 10px 12px;
+          }
+
+          svg {
+            color: var(--primary);
+          }
         }
       }
 
@@ -208,9 +314,9 @@ const {
         align-items: center;
         justify-content: center;
 
-        @include view-tablet-s {
-          order: 1;
-        }
+        /* @include view-tablet-s { */
+        /*   order: 1; */
+        /* } */
 
         .hero-img {
           border-radius: 8px;

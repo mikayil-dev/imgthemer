@@ -1,5 +1,5 @@
 ---
-import logo from '@assets/images/anon.webp';
+import logo from '@assets/images/logo.webp';
 import Moon from '~icons/lucide/moon';
 import Sun from '~icons/lucide/sun-medium';
 import config from 'project-config.ts';
@@ -88,7 +88,7 @@ import config from 'project-config.ts';
   <nav id="main-nav" aria-label="Main" hidden>
     <a href="/#home" title="To homepage">Home</a>
     {
-      config.modules.blog && (
+      config.modules.blog.enabled && (
         <a href="/blog" title="To our blog">
           Blog
         </a>
@@ -138,6 +138,10 @@ import config from 'project-config.ts';
     box-shadow: 0 0 8px rgba(0, 0, 0, 0.2);
     z-index: 10000;
 
+    @include view-mobile {
+      padding: 12px 20px;
+    }
+
     &::after {
       z-index: -1;
       position: absolute;
@@ -163,6 +167,7 @@ import config from 'project-config.ts';
         height: 100%;
         object-fit: cover;
         object-position: center;
+        filter: saturate(2);
       }
     }
 
@@ -172,9 +177,9 @@ import config from 'project-config.ts';
       gap: 4px;
       transition: 0.3s;
 
-      @include view-tablet-s {
-        display: grid;
-      }
+      /* @include view-tablet-s { */
+      /*   display: grid; */
+      /* } */
 
       &[aria-expanded='true'] {
         transform: rotateZ(180deg);
@@ -208,27 +213,31 @@ import config from 'project-config.ts';
       gap: 8px;
       counter-reset: nav-link-counter;
 
-      @include view-tablet-s {
-        padding: 40px;
-        position: fixed;
-        top: 80px;
-        right: -8px;
-        height: 100%;
-        flex-direction: column;
-        justify-content: flex-start;
-        align-items: flex-end;
-        background-color: var(--header-bg);
-        backdrop-filter: blur(8px);
-        box-shadow:
-          inset 0 8px 8px -8px rgba(0, 0, 0, 0.2),
-          0 8px 8px rgba(0, 0, 0, 0.2);
-        transition: 0.3s;
-        transform: translateX(0);
-
-        &[hidden] {
-          transform: translateX(100%);
-        }
+      a {
+        display: none;
       }
+
+      /* @include view-tablet-s { */
+      /*   padding: 40px; */
+      /*   position: fixed; */
+      /*   top: 80px; */
+      /*   right: -8px; */
+      /*   height: 100%; */
+      /*   flex-direction: column; */
+      /*   justify-content: flex-start; */
+      /*   align-items: flex-end; */
+      /*   background-color: var(--header-bg); */
+      /*   backdrop-filter: blur(8px); */
+      /*   box-shadow: */
+      /*     inset 0 8px 8px -8px rgba(0, 0, 0, 0.2), */
+      /*     0 8px 8px rgba(0, 0, 0, 0.2); */
+      /*   transition: 0.3s; */
+      /*   transform: translateX(0); */
+      /**/
+      /*   &[hidden] { */
+      /*     transform: translateX(100%); */
+      /*   } */
+      /* } */
 
       a {
         padding: 10px;

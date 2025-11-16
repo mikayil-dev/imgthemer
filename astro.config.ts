@@ -17,12 +17,16 @@ export default defineConfig({
   ...(config.adapter === 'node'
     ? { adapter: node({ mode: 'standalone' }) }
     : {}),
-  site: 'https://mikayil.dev',
+  site: 'https://imgthemer.com',
   prefetch: {
     defaultStrategy: 'viewport',
     prefetchAll: true,
   },
-  integrations: [mdx(), sitemap(), blog({ enabled: config.modules.blog })],
+  integrations: [
+    mdx(),
+    sitemap(),
+    blog({ enabled: config.modules.blog.enabled }),
+  ],
   vite: {
     plugins: [
       Icons({
