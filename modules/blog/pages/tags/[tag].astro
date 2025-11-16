@@ -1,0 +1,45 @@
+---
+import type { GetStaticPaths } from 'astro';
+
+import BaseLayout from '@layouts/BaseLayout.astro';
+import PostContainer from '@components/PostContainer.astro';
+import { getCollection } from 'astro:content';
+
+export const getStaticPaths = (async () => {
+  const blogposts = await getCollection('blogposts');
+  const uniqueTags = [
+    ...new Set(blogposts.map((post) => post.data.categories).flat()),
+  ];
+
+  return uniqueTags.map((tag) => {
+    const filteredPosts = blogposts.filter((post) =>
+      post.data.categories.includes(tag),
+    );
+    return {
+      params: { tag },
+      props: { posts: filteredPosts },
+    };
+  });
+}) satisfies GetStaticPaths;
+
+const { tag } = Astro.params;
+const { posts } = Astro.props;
+---
+
+<BaseLayout
+  title={`#${tag} posts`}
+  description={`All blogposts marked with #${tag} on Mikayil's Dev Blog.`}
+>
+  <PostContainer {posts}>
+    <Fragment slot="heading">
+      Posts marked with <span>#{tag}</span>
+    </Fragment>
+  </PostContainer>
+</BaseLayout>
+
+<style lang="scss">
+  span {
+    color: var(--primary);
+    text-decoration: underline;
+  }
+</style>

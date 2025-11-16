@@ -1,0 +1,125 @@
+---
+import type { Props } from './PricingCard.types.ts';
+import Check from '~icons/lucide/circle-check';
+import Cross from '~icons/lucide/circle-x';
+import Neutral from '~icons/lucide/circle-minus';
+
+const {
+  id,
+  productTitle,
+  price,
+  neutralList,
+  featureList,
+  nonFeatureList,
+  featureTitle,
+  featureSubtitle,
+  ctaText,
+  ctaStyle = 'secondary',
+  link,
+  eyebrowText,
+  timeframe,
+}: Props = Astro.props;
+---
+
+<div class="pricing-card" id={id ?? ''}>
+  {eyebrowText && <p class="eyebrow">{eyebrowText}</p>}
+
+  <div class="top-container">
+    <h3 class="product-title">{productTitle}</h3>
+    <div class="pricing-container">
+      <h4 class="price">{price}</h4>
+      {timeframe && <small class="timeframe">{timeframe}</small>}
+    </div>
+    <a href={link} class={`${ctaStyle}-btn`}>{ctaText}</a>
+  </div>
+
+  <div class="bottom-container">
+    <h5>{featureTitle}</h5>
+    <h6>{featureSubtitle}</h6>
+    <ul class="icon">
+      {
+        neutralList?.length &&
+          neutralList.map((item) => (
+            <li>
+              <Neutral color="var(--gray)" />
+              {item}
+            </li>
+          ))
+      }
+      {
+        featureList?.length &&
+          featureList.map((item) => (
+            <li>
+              <Check color="var(--green)" style="filter:saturate(1.5)" />
+              {item}
+            </li>
+          ))
+      }
+      {
+        nonFeatureList?.length &&
+          nonFeatureList.map((item) => (
+            <li>
+              <Cross color="var(--red)" />
+              {item}
+            </li>
+          ))
+      }
+    </ul>
+  </div>
+
+  <style lang="scss">
+    .pricing-card {
+      position: relative;
+      flex: 1 1 300px;
+      max-width: 350px;
+      box-shadow: 0 0 6px rgba(0, 0, 0, 0.1);
+      border-radius: 12px;
+      border: 1px solid var(--border-color);
+
+      .eyebrow {
+        position: absolute;
+        top: -12px;
+        right: 24px;
+        background-color: var(--background);
+        padding: 0 8px;
+        font-size: 0.875rem;
+        font-weight: 700;
+        color: var(--primary);
+      }
+
+      .top-container {
+        padding: 20px;
+        border-bottom: 1px solid var(--border-color);
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+
+        .product-title {
+          @include h6;
+        }
+
+        .pricing-container {
+          display: flex;
+          align-items: baseline;
+          gap: 8px;
+
+          .price {
+            @include h3;
+            font-weight: 900;
+            margin-bottom: 0.25em;
+          }
+
+          small {
+            color: var(--gray);
+          }
+        }
+      }
+
+      .bottom-container {
+        padding: 20px;
+
+        @include ul-icon;
+      }
+    }
+  </style>
+</div>

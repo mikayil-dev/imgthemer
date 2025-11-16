@@ -1,0 +1,59 @@
+---
+import aboutImage from 'src/assets/images/anon.webp';
+import BaseLayout from '@layouts/BaseLayout.astro';
+import Hero from '@sections/Hero.astro';
+import ContentImage from '@sections/ContentImage.astro';
+import Accordion from '@components/Accordion.astro';
+import CardSection from '@sections/CardSection.astro';
+import config from 'project-config.ts';
+
+const heroH1 = 'This is a super useful website';
+const heroCopy =
+  'lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.';
+const heroEyebrow = 'Cut the fluff';
+const heroCta = 'Get Started';
+const heroSecondaryCta = 'Learn More';
+
+const aboutText =
+  'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.';
+const aboutImageAlt = 'About Us Image';
+const aboutTitle = 'About Us';
+const aboutId = 'about';
+---
+
+<BaseLayout>
+  <Hero
+    h1={heroH1}
+    copy={heroCopy}
+    eyebrow={heroEyebrow}
+    ctaText={heroCta}
+    secondaryCtaText={heroSecondaryCta}
+  />
+  <ContentImage
+    imgSrc={aboutImage}
+    imgAlt={aboutImageAlt}
+    id={aboutId}
+    imgSide="left"
+  >
+    <h2 slot="title">{aboutTitle}</h2>
+    <div slot="content">
+      <Accordion>
+        <h3 class="accordion-title" slot="accordion-title">Who We Are</h3>
+        <p class="accordion-text" slot="accordion-content">{aboutText}</p>
+      </Accordion>
+      <Accordion>
+        <h3 class="accordion-title" slot="accordion-title">Who We Are</h3>
+        <p class="accordion-text" slot="accordion-content">{aboutText}</p>
+      </Accordion>
+    </div>
+  </ContentImage>
+  {
+    config.modules.pricing.enabled && (
+      <CardSection
+        id="pricing"
+        title="Our Pricing Plans"
+        cardPages={config.modules.pricing.pages}
+      />
+    )
+  }
+</BaseLayout>

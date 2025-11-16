@@ -1,0 +1,238 @@
+---
+import { Image } from 'astro:assets';
+import IconBookmarkCheck from '~icons/material-symbols/bookmark-check';
+import type { ImageMetadata } from 'astro';
+
+interface Props {
+  bgImg?: ImageMetadata;
+  bgPattern?: boolean;
+  heroImg?: ImageMetadata;
+  /** @default 'right' */
+  heroImgSide?: 'left' | 'right';
+  /** @default 'start' */
+  textAlign?: 'start' | 'center' | 'end';
+  eyebrow?: string;
+  h1: string;
+  copy: string;
+  ctaText?: string;
+  secondaryCtaText?: string;
+}
+
+const {
+  bgImg,
+  bgPattern = true,
+  heroImg,
+  heroImgSide = 'right',
+  textAlign = 'center',
+  eyebrow,
+  h1 = 'This is a super useful website',
+  copy = 'Lorem, ipsum dolor sit amet consectetur adipisicing elit. Dolore corrupti architecto id, suscipit itaque perferendis labore iusto. Suscipit cupiditate illo, quaerat architecto deserunt praesentium fugit officiis a placeat repellendus distinctio!',
+  ctaText,
+  secondaryCtaText,
+}: Props = Astro.props;
+---
+
+<section id="home" class="hero">
+  <div class={`content${heroImgSide === 'left' ? ' img-left' : ''}`}>
+    {bgPattern && <div class="bgPattern" />}
+    <div class="text-container">
+      {
+        eyebrow && (
+          <p class="eyebrow">
+            <IconBookmarkCheck />
+            <span>{eyebrow}</span>
+          </p>
+        )
+      }
+
+      <h1 class:list={{ small: heroImg }}>{h1}</h1>
+
+      <p class="copy">
+        {copy}
+      </p>
+
+      {
+        (ctaText || secondaryCtaText) && (
+          <div class="btn-container">
+            {ctaText && <a class="primary-btn">{ctaText}</a>}
+            {secondaryCtaText && (
+              <a class="secondary-btn">{secondaryCtaText}</a>
+            )}
+          </div>
+        )
+      }
+    </div>
+
+    {
+      heroImg && (
+        <div class="img-container">
+          <Image class="hero-img" alt="Product image" src={heroImg} />
+        </div>
+      )
+    }
+  </div>
+
+  {
+    bgImg && (
+      <div class="bg-container">
+        {bgImg && <Image class="bg-img" alt="" src={bgImg} />}
+      </div>
+    )
+  }
+</section>
+
+<style lang="scss" define:vars={{ textAlign }}>
+  .hero {
+    position: relative;
+    display: flex;
+    align-items: stretch;
+    justify-content: center;
+    min-height: calc(100vh - var(--header-height));
+    min-height: calc(100svh - var(--header-height));
+    padding: 0;
+    max-width: none;
+
+    .content {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      justify-content: space-between;
+      gap: 100px;
+      align-items: center;
+      padding: var(--section-padding);
+      max-width: var(--max-width);
+
+      &.img-left {
+        flex-direction: row-reverse;
+      }
+
+      @include view-tablet {
+        gap: 60px;
+      }
+
+      @include view-tablet-s {
+        flex-direction: column;
+      }
+
+      @include view-mobile {
+        gap: 40px;
+      }
+
+      .bgPattern {
+        position: absolute;
+        top: 50%;
+        left: 0;
+        transform: translateY(-50%);
+        width: 100%;
+        height: 90%;
+        z-index: 1;
+        overflow: hidden;
+        background-position: center;
+        background-size: 160px 80px;
+        background-image:
+          linear-gradient(0deg, rgba(0, 0, 0, 0.06) 2px, transparent 1px),
+          linear-gradient(90deg, rgba(0, 0, 0, 0.06) 2px, transparent 1px);
+
+        &::after {
+          content: '';
+          position: absolute;
+          inset: 0;
+          pointer-events: none;
+          background: radial-gradient(
+            circle at center,
+            transparent 0%,
+            var(--background) 90%
+          );
+        }
+      }
+
+      .text-container {
+        z-index: 3;
+        display: flex;
+        flex-direction: column;
+        align-items: var(--textAlign);
+        justify-content: center;
+        flex: 1 1 60%;
+        text-align: var(--textAlign);
+        max-width: 1000px;
+
+        @include view-tablet-s {
+          order: 2;
+        }
+
+        .eyebrow {
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+          letter-spacing: 0.5px;
+          text-transform: uppercase;
+          border-radius: 8px;
+          padding: 6px 16px 5px;
+          border: 1px solid var(--primary);
+          width: fit-content;
+          margin-bottom: 2rem;
+          background-color: var(--highlight);
+          color: var(--primary);
+          font-weight: 800;
+
+          span {
+            line-height: 1;
+          }
+        }
+
+        h1 {
+          margin-bottom: 2.5rem;
+
+          &.small {
+            @include h2;
+            font-weight: 900;
+          }
+        }
+
+        .copy {
+          @include copy-l;
+          font-weight: 500;
+        }
+
+        .btn-container {
+          margin-top: 3rem;
+          display: flex;
+          gap: 1rem;
+        }
+      }
+
+      .img-container {
+        z-index: 3;
+        flex: 1 1 40%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        @include view-tablet-s {
+          order: 1;
+        }
+
+        .hero-img {
+          border-radius: 8px;
+          width: 100%;
+          height: auto;
+          object-fit: contain;
+        }
+      }
+    }
+
+    .bg-container {
+      z-index: 1;
+      position: absolute;
+      width: 100%;
+      height: 100%;
+
+      .bg-img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center;
+      }
+    }
+  }
+</style>

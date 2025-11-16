@@ -1,0 +1,296 @@
+---
+import logo from '@assets/images/anon.webp';
+import Moon from '~icons/lucide/moon';
+import Sun from '~icons/lucide/sun-medium';
+import config from 'project-config.ts';
+---
+
+<script>
+  // Nav toggle Logic
+  const navToggle = document.querySelector('header .mbt');
+  const nav = document.querySelector('header nav');
+  const navLinks = document.querySelectorAll('header nav a');
+
+  function toggleMenu() {
+    if (nav?.hasAttribute('hidden') && window.innerWidth <= breakpoint) {
+      document.body.style.overflow = 'hidden';
+      nav?.removeAttribute('hidden');
+      navToggle?.setAttribute('aria-expanded', 'true');
+    } else {
+      document.body.style.overflow = 'auto';
+      nav?.setAttribute('hidden', 'true');
+      navToggle?.setAttribute('aria-expanded', 'false');
+    }
+  }
+
+  navToggle?.addEventListener('click', toggleMenu);
+  navLinks.forEach((link) => {
+    link.addEventListener('click', () => {
+      document.body.style.overflow = 'auto';
+      nav?.setAttribute('hidden', 'true');
+      navToggle?.setAttribute('aria-expanded', 'false');
+    });
+  });
+
+  // Resize Logic
+  let lastWidth = 0;
+  const breakpoint = 840;
+
+  function onResize() {
+    if (nav?.hasAttribute('hidden') || window.innerWidth > breakpoint) {
+      return;
+    }
+
+    if (lastWidth !== window.innerWidth && !nav?.hasAttribute('hidden')) {
+      lastWidth = window.innerWidth;
+      toggleMenu();
+    }
+  }
+
+  function handleInitialResize() {
+    if (window.innerWidth <= breakpoint) return;
+    nav?.removeAttribute('hidden');
+    navToggle?.setAttribute('aria-expanded', 'false');
+  }
+
+  window.addEventListener('resize', onResize);
+
+  // Dark mode logic
+  const darkmodeToggle = document.querySelector(
+    'header button.darkmode-toggle',
+  );
+
+  darkmodeToggle?.addEventListener('click', () => {
+    if (document.documentElement.hasAttribute('data-dark-active')) {
+      document.documentElement.removeAttribute('data-dark-active');
+      darkmodeToggle.removeAttribute('data-dark-active');
+      localStorage.setItem('dark-mode', 'false');
+    } else {
+      document.documentElement.setAttribute('data-dark-active', '');
+      darkmodeToggle.setAttribute('data-dark-active', '');
+      localStorage.setItem('dark-mode', 'true');
+    }
+  });
+
+  // on document load
+  document.addEventListener('DOMContentLoaded', () => {
+    handleInitialResize();
+  });
+</script>
+
+<div class="header-placeholder"></div>
+
+<header id="header">
+  <a href="/#home" class="logo-container">
+    <img src={logo.src} alt="Logo" />
+  </a>
+
+  <nav id="main-nav" aria-label="Main" hidden>
+    <a href="/#home" title="To homepage">Home</a>
+    {
+      config.modules.blog && (
+        <a href="/blog" title="To our blog">
+          Blog
+        </a>
+      )
+    }
+    <a href="/#about" title="To the about section">About</a>
+
+    <button class="darkmode-toggle">
+      <div class="sun-container">
+        <Sun />
+      </div>
+      <div class="moon-container">
+        <Moon />
+      </div>
+    </button>
+  </nav>
+
+  <button class="mbt" aria-controls="main-nav" aria-label="Open Main Menu">
+    <span class="dot" aria-hidden="true"></span>
+    <span class="dot" aria-hidden="true"></span>
+    <span class="dot" aria-hidden="true"></span>
+    <span class="dot" aria-hidden="true"></span>
+    <span class="dot" aria-hidden="true"></span>
+    <span class="dot" aria-hidden="true"></span>
+    <span class="dot" aria-hidden="true"></span>
+    <span class="dot" aria-hidden="true"></span>
+    <span class="dot" aria-hidden="true"></span>
+  </button>
+</header>
+
+<style lang="scss">
+  .header-placeholder {
+    height: 80px;
+  }
+
+  header {
+    display: flex;
+    position: fixed;
+    width: 100%;
+    top: 0;
+    left: 0;
+    padding: 12px 40px;
+    background-color: var(--header-bg);
+    justify-content: space-between;
+    align-items: center;
+    height: 80px;
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.2);
+    z-index: 10000;
+
+    &::after {
+      z-index: -1;
+      position: absolute;
+      left: 0;
+      top: 0;
+      content: '';
+      width: 100%;
+      height: 80px;
+      backdrop-filter: blur(8px);
+    }
+
+    .logo-container {
+      display: flex;
+      height: 100%;
+      width: auto;
+      justify-content: center;
+      align-items: center;
+      border-radius: 4px;
+      overflow: hidden;
+
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center;
+      }
+    }
+
+    .mbt {
+      display: none;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 4px;
+      transition: 0.3s;
+
+      @include view-tablet-s {
+        display: grid;
+      }
+
+      &[aria-expanded='true'] {
+        transform: rotateZ(180deg);
+        gap: 4px;
+
+        .dot {
+          &:nth-child(2),
+          &:nth-child(4),
+          &:nth-child(6),
+          &:nth-child(8) {
+            opacity: 0;
+          }
+        }
+      }
+
+      .dot {
+        display: block;
+        width: 6px;
+        height: 6px;
+        background-color: var(--primary);
+        border-radius: 50%;
+        overflow: hidden;
+        transition: 0.3s;
+      }
+    }
+
+    nav {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      gap: 8px;
+      counter-reset: nav-link-counter;
+
+      @include view-tablet-s {
+        padding: 40px;
+        position: fixed;
+        top: 80px;
+        right: -8px;
+        height: 100%;
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: flex-end;
+        background-color: var(--header-bg);
+        backdrop-filter: blur(8px);
+        box-shadow:
+          inset 0 8px 8px -8px rgba(0, 0, 0, 0.2),
+          0 8px 8px rgba(0, 0, 0, 0.2);
+        transition: 0.3s;
+        transform: translateX(0);
+
+        &[hidden] {
+          transform: translateX(100%);
+        }
+      }
+
+      a {
+        padding: 10px;
+        text-transform: uppercase;
+        font-weight: bold;
+        position: relative;
+        transition: 0.3s;
+        @include font-heading;
+
+        @include hover {
+          color: var(--text-highlight);
+
+          &::after {
+            width: 100%;
+          }
+        }
+
+        &.active {
+          text-decoration: underline;
+        }
+
+        &::after {
+          content: '';
+          position: absolute;
+          bottom: 0;
+          left: 0;
+          width: 0%;
+          height: 2px;
+          border-radius: 50px;
+          background-color: var(--primary);
+          transition: 0.3s;
+        }
+      }
+
+      .darkmode-toggle {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-left: 16px;
+
+        .sun-container,
+        .moon-container {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          color: var(--text);
+        }
+
+        .sun-container {
+          display: none;
+        }
+
+        &[data-dark-active] {
+          .sun-container {
+            display: block;
+          }
+
+          .moon-container {
+            display: none;
+          }
+        }
+      }
+    }
+  }
+</style>

@@ -1,0 +1,371 @@
+---
+import Head from '@sections/Head.astro';
+import Header from '@sections/Header.astro';
+import Footer from '@sections/Footer.astro';
+
+const { title, description, ogImgSrc, ogImgAlt } = Astro.props;
+---
+
+<html lang="en">
+  <Head {title} {description} {ogImgSrc} {ogImgAlt} />
+
+  <body>
+    <Header />
+
+    <main>
+      <slot />
+    </main>
+
+    <Footer />
+  </body>
+</html>
+
+<style lang="scss" is:global>
+  @import 'modern-normalize/modern-normalize.css';
+  @font-face {
+    font-family: 'RedHat';
+    font-style: normal;
+    font-weight: 100 900;
+    src: url('/fonts/RedHat.woff2') format('woff2');
+  }
+  @font-face {
+    font-family: 'RedHat';
+    font-style: italic;
+    font-weight: 100 900;
+    src: url('/fonts/RedHat-italic.woff2') format('woff2');
+  }
+
+  // Animation
+  @keyframes blink-animation {
+    0% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 1;
+    }
+    51% {
+      opacity: 0;
+    }
+    100% {
+      opacity: 0;
+    }
+  }
+
+  // Styles
+  :root {
+    // Paddings and sizes
+    --section-padding: 80px;
+    --max-width: 1280px;
+    --header-height: 80px;
+
+    // Colors
+    --primary: #00aa33;
+    --text: #333333;
+    --text-highlight: #222222;
+    --black: #111111;
+    --highlight: #ffffff;
+    --background: #eeeeee;
+    --header-bg: #eeeeeeaa;
+    --border-color: #cccccc;
+    --lightgray: #aaaaaa;
+    --gray: #888888;
+    --darkgray: #444444;
+    --red: #ff5060;
+    --green: #55bb44;
+
+    &[data-dark-active] {
+      --text: #dddddd;
+      --text-highlight: #ffffff;
+      --border-color: #777777;
+      --background: #121212;
+      --header-bg: #121212aa;
+    }
+
+    @include view-tablet {
+      --section-padding: 80px 40px;
+    }
+
+    @include view-mobile-s {
+      --section-padding: 40px 20px;
+      font-size: 14px;
+    }
+  }
+
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    scroll-margin-top: 80px;
+  }
+
+  html {
+    font-size: 100%;
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    @include copy;
+  }
+
+  body {
+    background-color: var(--background);
+    min-height: 100vh;
+    min-height: 100svh;
+
+    *:focus {
+      outline: none;
+    }
+
+    *:focus-visible {
+      outline: 2px dotted var(--yellow);
+    }
+  }
+
+  a {
+    text-decoration: none;
+    cursor: pointer;
+  }
+
+  button {
+    cursor: pointer;
+    border: none;
+    border-radius: 0;
+    appearance: none;
+    background-color: transparent;
+  }
+
+  .primary-btn {
+    @include font-heading;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 0.75em 1em 0.688em;
+    border-radius: 999px;
+    border: 2px solid var(--primary);
+    background-color: var(--primary);
+    color: var(--text);
+    transition: 0.2s;
+    line-height: 1;
+    font-weight: 800;
+    box-shadow: 0 4px 10px #00000022;
+    color: var(--highlight);
+
+    @include hover {
+      filter: brightness(1.1);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 14px #00000033;
+    }
+  }
+
+  .secondary-btn {
+    @include font-heading;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 0.75em 1em 0.688em;
+    transition: 0.2s;
+    line-height: 1;
+    font-weight: 800;
+    border-radius: 999px;
+    border: 2px solid var(--highlight);
+    background-color: var(--highlight);
+    color: var(--gray);
+    box-shadow: 0 4px 10px #00000022;
+
+    @include hover {
+      color: var(--darkgray);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 14px #00000033;
+    }
+  }
+
+  h1 {
+    @include h1;
+  }
+
+  h2 {
+    @include h2;
+  }
+
+  .section-heading {
+    font-weight: 900;
+    margin-bottom: 2.5rem;
+  }
+
+  h3 {
+    @include h3;
+  }
+
+  h4 {
+    @include h4;
+  }
+
+  h5 {
+    @include h5;
+  }
+
+  h6 {
+    @include h6;
+  }
+
+  p,
+  a,
+  li {
+    @include copy;
+  }
+
+  small {
+    @include smallText;
+  }
+
+  strong {
+    font-weight: bold;
+    text-shadow: 0 0 1px var(--text-highlight);
+    color: var(--text-highlight);
+  }
+
+  main {
+    width: 100%;
+    height: 100%;
+
+    @include ol;
+    @include ul;
+  }
+
+  section,
+  article {
+    overflow: hidden;
+    width: 100%;
+    max-width: var(--max-width);
+    margin: 0 auto;
+    padding: var(--section-padding);
+  }
+
+  article {
+    max-width: 1000px;
+
+    > .cover-container {
+      width: 100%;
+
+      img {
+        width: 100%;
+        height: auto;
+        border-radius: 8px;
+        box-shadow: 0 4px 10px #00000055;
+      }
+    }
+
+    > * + * {
+      margin-top: 1.25em;
+
+      &:first-child {
+        margin-top: 0;
+      }
+    }
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5 {
+      margin: 2em 0 1em;
+      border-bottom: 1px solid var(--primary);
+      width: fit-content;
+
+      &:first-child {
+        margin-top: 0;
+        margin-bottom: 0;
+      }
+
+      p {
+        all: inherit;
+      }
+    }
+
+    .categories {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+
+      .category {
+        line-height: 1;
+        display: flex;
+        @include font-heading;
+        color: var(--primary);
+        text-decoration: underline;
+        transition: 0.2s;
+
+        &::before {
+          content: '#';
+        }
+
+        @include hover {
+          color: var(--text-highlight);
+          text-decoration-color: var(--text-highlight);
+        }
+      }
+    }
+
+    blockquote {
+      padding: 20px;
+      font-style: italic;
+      background-color: var(--darkgray);
+      border-left: 3px solid var(--primary);
+      border-radius: 0 8px 8px 0;
+      margin: 2em 0;
+    }
+
+    pre {
+      padding: 20px;
+      border-radius: 8px;
+      border: 1px solid var(--primary);
+    }
+
+    img {
+      width: 100%;
+      height: auto;
+      border-radius: 8px;
+    }
+  }
+
+  .animate {
+    opacity: 0;
+    transition:
+      filter 1s,
+      transform 1s,
+      opacity 1s;
+    filter: blur(12px);
+
+    &.left {
+      transform: translateX(-40px) translateY(0);
+    }
+
+    &.right {
+      transform: translateX(40px) translateY(0);
+    }
+
+    &.top {
+      transform: translateX(0) translateY(-40px);
+    }
+
+    &.bottom {
+      transform: translateX(0) translateY(40px);
+    }
+
+    &.visible {
+      opacity: 1;
+      filter: blur(0);
+      transform: translateX(0) translateY(0);
+    }
+  }
+
+  .cursor {
+    display: inline-block;
+    width: 20px;
+    height: 0.9em;
+    background-color: var(--text-highlight);
+    transform: translateY(0.1em);
+    animation: blink-animation 1s infinite;
+  }
+</style>

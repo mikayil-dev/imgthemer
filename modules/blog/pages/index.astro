@@ -1,0 +1,19 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+import PostContainer from '@components/PostContainer.astro';
+import { getCollection } from 'astro:content';
+
+const posts = (await getCollection('blogposts')).sort(
+  (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
+);
+---
+
+<BaseLayout
+  title="All blogposts"
+  description="Here you can find all my blogposts about various topics."
+>
+  <PostContainer {posts}>
+    <Fragment slot="heading"> All Blogposts </Fragment>
+  </PostContainer>
+</BaseLayout>
+)

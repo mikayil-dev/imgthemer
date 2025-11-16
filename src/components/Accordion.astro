@@ -1,0 +1,156 @@
+---
+import Chevron from '~icons/lucide/chevron-down';
+
+const btnId = 'accBtn' + crypto.randomUUID();
+const textId = 'accText' + crypto.randomUUID();
+---
+
+<script>
+  const accordions = document.querySelectorAll('.accordion');
+
+  accordions.forEach((accordion) => {
+    const toggleBtn = accordion.querySelector('.toggle-btn');
+    const textContainer = accordion.querySelector('.text-wrapper');
+
+    toggleBtn?.addEventListener('click', () => {
+      toggleBtn.setAttribute(
+        'aria-expanded',
+        (toggleBtn.getAttribute('aria-expanded') !== 'true').toString(),
+      );
+      textContainer?.setAttribute(
+        'aria-hidden',
+        (toggleBtn.getAttribute('aria-expanded') !== 'true').toString(),
+      );
+    });
+  });
+</script>
+
+<div class="accordion">
+  <button
+    type="button"
+    class="toggle-btn"
+    id={btnId}
+    aria-controls={textId}
+    aria-expanded="false"
+  >
+    <span class="icon-container">
+      <Chevron />
+    </span>
+
+    <span class="title-container">
+      <slot name="accordion-title" />
+    </span>
+  </button>
+
+  <div
+    class="text-wrapper"
+    id={textId}
+    aria-labelledby={btnId}
+    aria-hidden="true"
+  >
+    <div class="text-inner">
+      <slot name="accordion-content" />
+    </div>
+  </div>
+</div>
+
+<style lang="scss">
+  .accordion {
+    width: 100%;
+    border-bottom: 2px solid var(--primary);
+
+    .toggle-btn {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+
+      .icon-container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .title-container {
+        padding: 4px 0;
+      }
+
+      &[aria-expanded='true'] {
+        :global(svg) {
+          transform: rotate(180deg);
+        }
+      }
+
+      :global(svg) {
+        transition: 0.2s;
+        color: var(--primary);
+        height: 32px;
+        min-width: 32px;
+      }
+
+      :global(p) {
+        text-align: start;
+        width: fit-content;
+        width: 100%;
+        padding: 16px 0;
+        @include font-heading;
+        color: var(--text-highlight);
+        font-weight: 900;
+      }
+    }
+
+    .text-wrapper {
+      display: grid;
+      grid-template-rows: 0fr;
+      transition: 0.2s;
+
+      &[aria-hidden='false'] {
+        grid-template-rows: 1fr;
+
+        .text-inner {
+          padding: 0 16px 16px calc(32px + 12px);
+
+          @include view-mobile {
+            padding: 0 16px 16px;
+          }
+        }
+      }
+
+      .text-inner {
+        padding: 0 calc(32px + 12px);
+        overflow: hidden;
+        transition: 0.2s;
+
+        @include view-mobile {
+          padding: 0 16px;
+        }
+
+        :global(a) {
+          color: var(--primary);
+          transition: 0.2s;
+          position: relative;
+
+          &::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0%;
+            height: 2px;
+            border-radius: 50px;
+            background-color: var(--primary);
+            transition: 0.3s;
+          }
+
+          @include hover {
+            gap: 12px;
+
+            &::after {
+              width: 100%;
+            }
+          }
+        }
+      }
+    }
+  }
+</style>

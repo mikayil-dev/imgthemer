@@ -1,0 +1,84 @@
+---
+import config from '@config';
+
+const {
+  title,
+  description = config.head.description,
+  ogImgSrc,
+  ogImgAlt,
+} = Astro.props;
+
+const finalTitle = title
+  ? title + config.head.titleSeperator + config.head.titleSuffix
+  : 'A useful website - just does what you need it to do';
+---
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width" />
+  <meta name="generator" content={Astro.generator} />
+
+  <link rel="sitemap" href="/sitemap-index.xml" />
+
+  <title>{finalTitle}</title>
+  <meta name="description" content={description} />
+
+  <!-- Open Graph tags -->
+  <meta property="og:title" content={finalTitle} />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content={import.meta.env.SITE} />
+  <meta property="og:description" content={description} />
+  <meta property="og:image" content={ogImgSrc ?? '/images/ogImg.webp'} />
+  <meta
+    property="og:image:alt"
+    content={ogImgAlt ?? 'Screenshot of the website'}
+  />
+
+  <link
+    rel="icon"
+    type="image/png"
+    href="/favicons/favicon-96x96.png"
+    sizes="96x96"
+  />
+  <link rel="icon" type="image/svg+xml" href="/favicons/favicon.svg" />
+  <link rel="shortcut icon" href="/favicons/favicon.ico" />
+  <link
+    rel="apple-touch-icon"
+    sizes="180x180"
+    href="/favicons/apple-touch-icon.png"
+  />
+  <meta name="apple-mobile-web-app-title" content={config.head.titleSuffix} />
+  <link rel="manifest" href="/favicons/site.webmanifest" />
+
+  <link
+    rel="preload"
+    href="/fonts/RedHat.woff2"
+    as="font"
+    type="font/woff2"
+    crossorigin="anonymous"
+  />
+  <link
+    rel="preload"
+    href="/fonts/RedHat-italic.woff2"
+    as="font"
+    type="font/woff2"
+    crossorigin="anonymous"
+  />
+
+  <!-- Animations -->
+  <script src="/src/assets/scripts/animation.js"></script>
+
+  <!-- Main Script -->
+  <script src="/src/assets/scripts/main.js"></script>
+
+  <!-- Analytics -->
+  <script
+    is:inline
+    defer
+    src="/scripts/secondary.js"
+    data-host-url={config.analytics.hostUrl}
+    data-website-id={config.analytics.id}></script>
+
+  <!-- Slot -->
+  <slot />
+</head>

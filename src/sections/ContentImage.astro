@@ -1,0 +1,68 @@
+---
+import type { ImageMetadata } from 'astro';
+import { Image } from 'astro:assets';
+
+interface Props {
+  id?: string;
+  imgSrc?: ImageMetadata;
+  imgAlt?: string;
+  /* @default 'right' */
+  imgSide?: 'left' | 'right';
+}
+
+const { id, imgSrc, imgAlt, imgSide = 'right' }: Props = Astro.props;
+const { title } = Astro.slots;
+---
+
+<section class={`text-image-section img-${imgSide}`} id={id ?? ''}>
+  <div class="content-container">
+    {
+      title && (
+        <div class="title-wrapper">
+          <slot name="title" />
+        </div>
+      )
+    }
+
+    <slot name="content" />
+  </div>
+  {
+    imgSrc && (
+      <div class="image-container">
+        <Image src={imgSrc} alt={imgAlt ?? 'Image'} />
+      </div>
+    )
+  }
+</section>
+
+<style lang="scss">
+  .text-image-section {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 80px;
+
+    &.img-left {
+      flex-direction: row-reverse;
+      flex-wrap: wrap-reverse;
+    }
+
+    .content-container {
+      flex: 1 1 400px;
+
+      :global(.title-wrapper *) {
+        margin-bottom: 0.5em;
+      }
+    }
+
+    .image-container {
+      flex: 1 1 300px;
+
+      img {
+        width: 100%;
+        height: auto;
+        border-radius: 12px;
+      }
+    }
+  }
+</style>

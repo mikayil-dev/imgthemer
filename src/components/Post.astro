@@ -1,0 +1,229 @@
+---
+import { Image } from 'astro:assets';
+import defaultPostCover from 'src/assets/images/anon.webp';
+import defaultAuthorImg from 'src/assets/images/anon.webp';
+import type { CollectionEntry } from 'astro:content';
+
+interface Props {
+  post: CollectionEntry<'blogposts'>;
+}
+
+const { post }: Props = Astro.props;
+
+let postUrl: string;
+let tagUrl: string;
+if (post.collection === 'blogposts') {
+  postUrl = '/blog/posts';
+  tagUrl = '/blog/tags';
+} else {
+  throw new Error('Unknown Content Type');
+}
+---
+
+<div class="post">
+  <a href={`${postUrl}/${post.id}`} class="img-container" title="read post">
+    <Image
+      src={post.data.cover ?? defaultPostCover}
+      alt={post.data.coverAlt ?? ''}
+    />
+  </a>
+
+  <div class="text-container">
+    <p class="pubDate">
+      {
+        post.data.pubDate.toLocaleString('en-GB', {
+          dateStyle: 'long',
+        })
+      }
+    </p>
+
+    <a class="heading" href={`${postUrl}/${post.id}`}>
+      <h3>{post.data.title}</h3>
+    </a>
+
+    <p class="description">{post.data.description}</p>
+
+    <div class="categories">
+      {
+        post.data.categories.map((c) => (
+          <a href={`${tagUrl}/${c.toLowerCase()}`} class="category">
+            {c}
+          </a>
+        ))
+      }
+    </div>
+
+    {
+      post.collection === 'blogposts' && (
+        <p class="author">
+          <Image
+            src={post.data.author?.img ?? defaultAuthorImg}
+            alt={post.data.author?.name ?? 'Author image'}
+          />
+          {post.data.author?.name}
+        </p>
+      )
+    }
+  </div>
+</div>
+
+<style lang="scss">
+  .post {
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 300px;
+    max-width: 350px;
+    border: 1px solid var(--primary);
+    border-radius: 8px;
+    overflow: hidden;
+    transition: border-color 0.2s;
+    box-shadow: 0 4px 10px #00000055;
+
+    &:has(.heading:hover, .img-container:hover) {
+      @include hover {
+        border-color: var(--text-highlight);
+
+        .img-container {
+          &::after {
+            opacity: 1;
+          }
+        }
+
+        .text-container .heading h3 {
+          text-decoration-color: var(--primary);
+          text-decoration-thickness: 2px;
+        }
+      }
+    }
+
+    .img-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+      height: auto;
+      aspect-ratio: 16/9;
+      overflow: hidden;
+      transition: 0.2s;
+      position: relative;
+
+      &::after {
+        @include font-heading;
+        content: 'Read';
+        color: var(--text-highlight);
+        display: flex;
+        text-shadow: 0 0 4px var(--background);
+        justify-content: center;
+        align-items: center;
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        backdrop-filter: blur(4px) brightness(0.5);
+        opacity: 0;
+        transition: 0.2s;
+      }
+
+      @include hover {
+        border-color: var(--text-highlight);
+
+        &::after {
+          opacity: 1;
+        }
+      }
+
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center;
+      }
+    }
+
+    .text-container {
+      display: flex;
+      flex-direction: column;
+      flex: 1 1 auto;
+      padding: 20px;
+
+      .pubDate {
+        margin-bottom: 12px;
+      }
+
+      .pubDate,
+      .author,
+      .description {
+        font-size: 0.875rem;
+        color: var(--gray);
+      }
+
+      .heading {
+        width: fit-content;
+
+        h3 {
+          @include h6;
+          color: var(--text-highlight);
+          margin-bottom: 12px;
+          display: -webkit-box;
+          -webkit-box-orient: vertical;
+          -webkit-line-clamp: 2;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          width: fit-content;
+          transition: 0.2s;
+          text-decoration: underline;
+          text-decoration-color: transparent;
+          text-underline-offset: 4px;
+          min-height: calc(2 * 1em * 1.4);
+        }
+      }
+
+      .description {
+        color: var(--lightgray);
+        margin-bottom: 20px;
+      }
+
+      .categories {
+        margin-top: auto;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-bottom: 20px;
+
+        .category {
+          line-height: 1;
+          font-size: 0.8rem;
+          display: flex;
+          @include font-heading;
+          color: var(--primary);
+          text-decoration: underline;
+          transition: 0.2s;
+
+          &::before {
+            content: '#';
+          }
+
+          @include hover {
+            color: var(--text-highlight);
+            text-decoration-color: var(--text-highlight);
+          }
+        }
+      }
+
+      .author {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+
+        img {
+          height: 2em;
+          width: auto;
+          overflow: hidden;
+          border-radius: 50%;
+        }
+      }
+    }
+  }
+</style>

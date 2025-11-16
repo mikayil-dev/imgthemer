@@ -1,0 +1,112 @@
+---
+import type { Props as PricingProps } from '../components/PricingCard.types.ts';
+import PricingCard from '../components/PricingCard.astro';
+import Card from '../components/Card.astro';
+
+interface Props {
+  id?: string;
+  title?: string;
+  cardPages: Record<string, PricingProps[] | Record<string, any>>;
+}
+
+const { id, title, cardPages }: Props = Astro.props;
+---
+
+<script>
+  const cardSections = document.querySelectorAll('.card-section');
+  cardSections.forEach((section) => {
+    const pageBtns = section.querySelectorAll('.btn-container .card-page-btn');
+
+    pageBtns.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const targetPage = btn.getAttribute('data-card-page-btn');
+        const cardContainers = section.querySelectorAll('.card-container');
+
+        // Update button active states
+        pageBtns.forEach((b) => {
+          b.setAttribute('data-active', b === btn ? 'true' : 'false');
+        });
+
+        // Update card container active states
+        cardContainers.forEach((container) => {
+          const containerPage = container.getAttribute('data-card-page');
+          container.setAttribute(
+            'data-active',
+            containerPage === targetPage ? 'true' : 'false',
+          );
+        });
+      });
+    });
+  });
+</script>
+
+<section class="card-section" id={id ?? ''}>
+  {title && <h2 class="section-heading">{title}</h2>}
+
+  {
+    Object.keys(cardPages).length > 1 && (
+      <div class="btn-container">
+        {Object.keys(cardPages).map((key, index) => (
+          <button
+            class="card-page-btn"
+            data-active={index === 0}
+            data-card-page-btn={key}
+          >
+            {key}
+          </button>
+        ))}
+      </div>
+    )
+  }
+
+  {
+    Object.entries(cardPages).map(([page, cards], index) => (
+      <div
+        class="card-container"
+        data-card-page={page}
+        data-active={index === 0}
+      >
+        {Array.isArray(cards) &&
+          cards.map((card) =>
+            card.price ? <PricingCard {...card} /> : <Card {...card} />,
+          )}
+      </div>
+    ))
+  }
+  <div class="card-container"></div>
+</section>
+
+<style lang="scss">
+  .card-section {
+    .btn-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: fit-content;
+      margin: 0 auto;
+      margin-bottom: 2.5em;
+
+      button {
+        padding: 12px 24px;
+        border-bottom: 4px solid var(--lightgray);
+        color: var(--text);
+
+        &[data-active='true'] {
+          border-bottom: 4px solid var(--primary);
+          font-weight: 700;
+        }
+      }
+    }
+
+    .card-container {
+      display: none;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 32px;
+
+      &[data-active='true'] {
+        display: flex;
+      }
+    }
+  }
+</style>

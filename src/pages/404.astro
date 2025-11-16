@@ -1,0 +1,33 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+---
+
+<BaseLayout
+  title="404 - Page not found"
+  description="The page you're looking for could not be found."
+>
+  <section>
+    <h1 class="section-heading">404 - Page not found</h1>
+    <p>
+      It seems you're going off-track. You're an adventureous one. :)<br />
+      However there's nothing to see here.
+    </p>
+    <div class="link-container">
+      <a href="/" class="primary-btn">Back to homepage</a>
+    </div>
+  </section>
+</BaseLayout>
+
+<style lang="scss">
+  section {
+    p {
+      @include copy-l;
+      margin-bottom: 32px;
+    }
+
+    .link-container {
+      display: flex;
+      gap: 20px;
+    }
+  }
+</style>
