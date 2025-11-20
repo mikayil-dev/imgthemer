@@ -1,0 +1,59 @@
+name: Deploy Astro container
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: prod
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Log in to GHCR
+        run: |
+          echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io \
+            -u "${{ github.actor }}" --password-stdin
+
+      - name: Build Docker image
+        run: |
+          IMAGE_NAME="ghcr.io/${{ github.repository_owner }}/imgthemer"
+          TAG="${GITHUB_SHA}"
+          docker build \
+            -t "${IMAGE_NAME}:${TAG}" \
+            -t "${IMAGE_NAME}:latest" \
+            .
+
+      - name: Push Docker image
+        run: |
+          IMAGE_NAME="ghcr.io/${{ github.repository_owner }}/imgthemer"
+          TAG="${GITHUB_SHA}"
+          docker push "${IMAGE_NAME}:${TAG}"
+          docker push "${IMAGE_NAME}:latest"
+
+      - name: Deploy on VPS (pull & restart via docker compose)
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            IMAGE_NAME="ghcr.io/${{ github.repository_owner }}/imgthemer"
+
+            echo "${{ secrets.GHCR_TOKEN }}" | docker login ghcr.io \
+              -u "${{ secrets.GHCR_USER }}" --password-stdin
+
+            cd /srv/imgthemer.com
+
+            docker compose pull imgthemer
+            docker compose up -d imgthemer
+            docker image prune -f

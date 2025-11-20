@@ -1,0 +1,9 @@
+# NOTE: DOCUMENTATION - this goes on the server only 
+# and doesn't get used anywhere else
+services:
+  imgthemer:
+    image: ghcr.io/mikayil-dev/imgthemer:latest
+    container_name: imgthemer
+    restart: unless-stopped
+    ports:
+      - "4321:4321"
