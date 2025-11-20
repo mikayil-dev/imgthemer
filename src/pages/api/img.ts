@@ -1,7 +1,11 @@
-import { exec } from 'child_process';
+import { type ExecException, exec } from 'child_process';
+import { createReadStream, createWriteStream, unlink } from 'fs';
+import { pipeline } from 'stream/promises';
 import type { APIRoute } from 'astro';
 
-const execAsync = (cmd: string) => {
+export const prerender = false;
+
+function execAsync(cmd: string): Promise<ExecException | null | string> {
   return new Promise((resolve, reject) => {
     exec(cmd, (err, stdout) => {
       if (err) {
@@ -11,9 +15,7 @@ const execAsync = (cmd: string) => {
       }
     });
   });
-};
-
-export const prerender = false;
+}
 
 export const POST: APIRoute = async ({ request }) => {
   const data = await request.formData();
@@ -34,12 +36,44 @@ export const POST: APIRoute = async ({ request }) => {
   // output into antoher temp file serve back to user
   // delete temp files
 
-  return new Response(output, {
-    status: 200,
-    headers: {
-      'Content-Type': 'image/png',
-      'Content-Length': output.length.toString(),
-      'Cache-Control': 'no-store',
-    },
-  });
+  const originalId = crypto.randomUUID();
+  const fileType = file.type.split('/').pop();
+  const originalFilePath = `/tmp/${originalId}.${fileType}`;
+
+  await pipeline(file.stream(), createWriteStream(originalFilePath));
+
+  try {
+    const modifiedId = crypto.randomUUID();
+    const modifiedFilePath = `/tmp/${modifiedId}.${fileType}`;
+
+    await execAsync(
+      `lutgen apply --palette ${theme} ${originalFilePath} --output ${modifiedFilePath}`,
+    );
+
+    const fileStream = createReadStream(modifiedFilePath);
+    const webStream = new ReadableStream({
+      start(controller) {
+        fileStream.on('data', (chunk) => controller.enqueue(chunk));
+        fileStream.on('end', () => {
+          controller.close();
+          unlink(originalFilePath, () => 0);
+          unlink(modifiedFilePath, () => 0);
+        });
+        fileStream.on('error', (err) => controller.error(err));
+      },
+    });
+
+    return new Response(webStream, {
+      headers: {
+        'Content-Type': file.type,
+        'Cache-Control': 'no-store',
+      },
+    });
+  } catch (err) {
+    console.error('Server error occured while converting Image:\n', err);
+
+    return new Response(
+      JSON.stringify({ message: 'An unexpected Server error occured.' }),
+    );
+  }
 };
