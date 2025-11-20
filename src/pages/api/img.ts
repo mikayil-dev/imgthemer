@@ -1,9 +1,12 @@
 import { type ExecException, exec } from 'child_process';
 import { createReadStream, createWriteStream, unlink } from 'fs';
 import { pipeline } from 'stream/promises';
+import { palettes } from '@assets/scripts/palettes';
 import type { APIRoute } from 'astro';
 
 export const prerender = false;
+
+const MAX_FILE_SIZE = 15 * 1024 * 1024; // 15MB
 
 function execAsync(cmd: string): Promise<ExecException | null | string> {
   return new Promise((resolve, reject) => {
@@ -22,19 +25,24 @@ export const POST: APIRoute = async ({ request }) => {
   const file = data.get('file') as File;
   const theme = data.get('theme') ?? 'nord';
 
-  if (!file || typeof theme !== 'string') {
+  if (!file || !(file instanceof Blob)) {
+    return new Response(JSON.stringify({ message: 'File missing.' }), {
+      status: 400,
+    });
+  }
+
+  if (file.size > MAX_FILE_SIZE) {
     return new Response(
-      JSON.stringify({ message: 'file missing or theme corrupted' }),
-      {
-        status: 400,
-      },
+      JSON.stringify({ message: 'File is too large. Maximum size is 15MB.' }),
+      { status: 413 },
     );
   }
 
-  // TODO: Write file to disk temporarily
-  // Read file into command
-  // output into antoher temp file serve back to user
-  // delete temp files
+  if (typeof theme !== 'string' || !palettes.includes(theme)) {
+    return new Response(JSON.stringify({ message: 'Theme corrupted.' }), {
+      status: 400,
+    });
+  }
 
   const originalId = crypto.randomUUID();
   const fileType = file.type.split('/').pop();
@@ -74,6 +82,7 @@ export const POST: APIRoute = async ({ request }) => {
 
     return new Response(
       JSON.stringify({ message: 'An unexpected Server error occured.' }),
+      { status: 500 },
     );
   }
 };

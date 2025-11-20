@@ -30,6 +30,7 @@ const {
 ---
 
 <script>
+  const MAX_FILE_SIZE = 15 * 1024 * 1024; // 15MB
   const uploadBtn = document.querySelector('.upload-btn');
   const fileInput = document.getElementById('file');
   const themeSelect = document.getElementById('theme');
@@ -55,6 +56,12 @@ const {
 
     const file = target.files?.[0];
     if (!file) return;
+
+    if (file.size > MAX_FILE_SIZE) {
+      alert('File is too large. Maximum size is 15MB.');
+      target.value = '';
+      return;
+    }
 
     if (!file.type.startsWith('image/')) {
       alert('Please select an image file.');
@@ -150,7 +157,7 @@ const {
             {secondaryCtaText && (
               <a class="secondary-btn">{secondaryCtaText}</a>
             )}
-        <input
+            <input
               type="file"
               id="file"
               name="file"
