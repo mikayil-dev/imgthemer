@@ -79,6 +79,17 @@ const finalTitle = title
     data-host-url={config.analytics.hostUrl}
     data-website-id={config.analytics.id}></script>
 
+  <!-- Adsense -->
+  <meta
+    name="google-adsense-account"
+    content={`ca-pub-${config.adSense.publisherId}`}
+  />
+  <script
+    is:inline
+    async
+    src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-${config.adSense.publisherId}`}
+    crossorigin="anonymous"></script>
+
   <!-- Slot -->
   <slot />
 </head>
