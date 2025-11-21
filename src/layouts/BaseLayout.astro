@@ -12,23 +12,49 @@ const { title, description, ogImgSrc, ogImgAlt } = Astro.props;
   <body>
     <Header />
 
-    <ins
-      class="adsbygoogle"
-      style="display:block"
-      data-ad-client="ca-pub-7000497698954123"
-      data-ad-slot="5981902681"
-      data-ad-format="auto"
-      data-full-width-responsive="true"></ins>
+    <main>
+      <div class="left-adslot">
+        <ins
+          class="adsbygoogle"
+          style="display:block"
+          data-ad-client="ca-pub-7000497698954123"
+          data-ad-slot="9966319075"
+          data-ad-format="auto"
+          data-full-width-responsive="true"></ins>
+      </div>
+
+      <div class="right-adslot">
+        <ins
+          class="adsbygoogle"
+          style="display:block"
+          data-ad-client="ca-pub-7000497698954123"
+          data-ad-slot="8516015345"
+          data-ad-format="auto"
+          data-full-width-responsive="true"></ins>
+      </div>
+
+      <!-- Main content -->
+      <div class="bgPattern"></div>
+      <slot />
+    </main>
+
+    <!-- Bottom ad -->
+    <div class="bottom-adslot">
+      <ins
+        class="adsbygoogle"
+        style="display:block"
+        data-ad-client="ca-pub-7000497698954123"
+        data-ad-slot="5981902681"
+        data-ad-format="auto"
+        data-full-width-responsive="true"></ins>
+    </div>
+
     <script is:inline>
       // @ts-expect-error
       (adsbygoogle = window.adsbygoogle || []).push({});
     </script>
 
-    <main>
-      <div class="bgPattern"></div>
-      <slot />
-    </main>
-
+    <!-- Footer -->
     <Footer />
   </body>
 </html>
@@ -251,6 +277,35 @@ const { title, description, ogImgSrc, ogImgAlt } = Astro.props;
 
     @include ol;
     @include ul;
+
+    .left-adslot,
+    .right-adslot {
+      position: absolute;
+      top: 40px;
+      left: 0;
+      width: calc((100svw - 1440px) / 2);
+      height: 100%;
+      z-index: 10;
+
+      @include view-desktop-l {
+        display: none;
+      }
+    }
+
+    .right-adslot {
+      left: auto;
+      right: 0;
+    }
+
+    .bottom-adslot {
+      width: 100%;
+      max-width: 100%;
+
+      > * {
+        width: 100% !important;
+        height: auto !important;
+      }
+    }
 
     .bgPattern {
       position: absolute;
