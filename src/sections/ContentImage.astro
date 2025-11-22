@@ -8,10 +8,23 @@ interface Props {
   imgAlt?: string;
   /* @default 'right' */
   imgSide?: 'left' | 'right';
+  textAlign?: 'start' | 'center' | 'end';
 }
 
-const { id, imgSrc, imgAlt, imgSide = 'right' }: Props = Astro.props;
+const {
+  id,
+  imgSrc,
+  imgAlt,
+  imgSide = 'right',
+  textAlign = 'start',
+}: Props = Astro.props;
 const { title } = Astro.slots;
+const alignItems =
+  textAlign === 'start'
+    ? 'flex-start'
+    : textAlign === 'center'
+      ? 'center'
+      : 'flex-end';
 ---
 
 <section class={`text-image-section img-${imgSide}`} id={id ?? ''}>
@@ -35,12 +48,13 @@ const { title } = Astro.slots;
   }
 </section>
 
-<style lang="scss">
+<style lang="scss" define:vars={{ textAlign, alignItems }}>
   .text-image-section {
     display: flex;
     justify-content: center;
     flex-wrap: wrap;
     gap: 80px;
+    padding-bottom: 0;
 
     &.img-left {
       flex-direction: row-reverse;
@@ -48,7 +62,11 @@ const { title } = Astro.slots;
     }
 
     .content-container {
+      display: flex;
+      flex-direction: column;
+      align-items: var(--alignItems, flex-start);
       flex: 1 1 400px;
+      text-align: var(--textAlign, start);
 
       :global(.title-wrapper *) {
         margin-bottom: 0.5em;

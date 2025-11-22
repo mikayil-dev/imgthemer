@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '@layouts/BaseLayout.astro';
 import Hero from '@sections/Hero.astro';
+import ContentImage from '@sections/ContentImage.astro';
 
 const h1 = 'Theme your images effortlessly';
 const copy =
@@ -12,4 +13,42 @@ const textAlign = 'start';
 
 <BaseLayout>
   <Hero {h1} {copy} {eyebrow} {ctaText} {textAlign} />
+  <ContentImage>
+    <h2 slot="title" class="heading">How does it work?</h2>
+    <p slot="content" class="text">
+      ImgThemer uses a library on the server for LUT manipulation and applies
+      your chosen theme seamlessly. This way you're able to get a preview of the
+      modified image before downloading it. Simply upload your image, select a
+      theme, and let ImgThemer do the rest!
+    </p>
+  </ContentImage>
+  <ContentImage textAlign="end">
+    <h2 slot="title" class="heading">Over 540+ Themes</h2>
+    <p slot="content" class="text">
+      With a vast collection of themes inspired by popular code editors and
+      color schemes, you're sure to find the perfect look for your images.
+      Whether you prefer dark themes like Dracula, light themes like Solarized,
+      or our personal all-time favorite Gruvbox, ImgThemer has something for
+      everyone.
+    </p>
+  </ContentImage>
+  <ContentImage>
+    <h2 slot="title" class="heading">Secure - We keep nothing</h2>
+    <p slot="content" class="text">
+      All image processing is done on our secure servers, and we do not store
+      any of your images or personal data. Once you've been served your themed
+      image, it's permanently deleted from our servers.
+    </p>
+  </ContentImage>
 </BaseLayout>
+
+<style lang="scss">
+  .heading,
+  .text {
+    max-width: 600px;
+  }
+
+  .heading {
+    @include h3;
+  }
+</style>

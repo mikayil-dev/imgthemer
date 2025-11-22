@@ -20,7 +20,7 @@ interface Props {
 const {
   heroImg,
   heroImgSide = 'right',
-  textAlign = 'center',
+  textAlign = 'start',
   eyebrow,
   h1 = 'This is a super useful website',
   copy = 'Lorem, ipsum dolor sit amet consectetur adipisicing elit. Dolore corrupti architecto id, suscipit itaque perferendis labore iusto. Suscipit cupiditate illo, quaerat architecto deserunt praesentium fugit officiis a placeat repellendus distinctio!',
@@ -35,8 +35,12 @@ const {
   const fileInput = document.getElementById('file');
   const themeSelect = document.getElementById('theme');
   let originalFile: File;
-  const imgWrapperOriginal = document.querySelector('.original.img-wrapper');
-  const imgWrapperModified = document.querySelector('.modified.img-wrapper');
+  const imgWrapperOriginal = document.querySelector(
+    '.original-container .img-wrapper',
+  );
+  const imgWrapperModified = document.querySelector(
+    '.modified-container .img-wrapper',
+  );
 
   uploadBtn?.addEventListener('click', (e) => {
     e.preventDefault();
@@ -92,6 +96,8 @@ const {
     }
 
     if (themeSelect.value) {
+      imgWrapperModified.classList.add('loading');
+      themeSelect.disabled = true;
       const formData = new FormData();
       formData.append('file', originalFile);
       formData.append('theme', themeSelect.value);
@@ -108,6 +114,10 @@ const {
         })
         .catch((error) => {
           console.error('Error modifying image:', error);
+        })
+        .finally(() => {
+          imgWrapperModified.classList.remove('loading');
+          themeSelect.disabled = false;
         });
     }
   });
@@ -174,14 +184,14 @@ const {
     <div class="original-container">
       <h3>Original Preview</h3>
 
-      <div class="original img-wrapper"></div>
+      <div class="img-wrapper"></div>
     </div>
 
     <div class="modified-container">
       <div class="modified-wrapper">
         <h3>Modified Preview</h3>
 
-        <div class="modified img-wrapper"></div>
+        <div class="img-wrapper"></div>
 
         <div class="select-container">
           <select name="theme" id="theme">
@@ -217,6 +227,7 @@ const {
       padding: var(--section-padding);
       padding-bottom: 0;
       max-width: var(--max-width);
+      width: 100%;
 
       .text-container {
         z-index: 3;
@@ -308,11 +319,41 @@ const {
           justify-content: center;
           align-items: center;
 
+          &::after {
+            transition: 0.3s;
+            opacity: 0;
+            pointer-events: none;
+            font-size: 2rem;
+            content: 'Processing...';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: rgba(0, 0, 0, 0.8);
+            color: #fff;
+            padding: 8px 16px;
+            border-radius: 4px;
+            font-size: 1rem;
+          }
+
+          &.loading {
+            position: relative;
+
+            &::after {
+              opacity: 1;
+            }
+
+            :global(img) {
+              filter: blur(4px) brightness(0.7);
+            }
+          }
+
           :global(img) {
             width: 100%;
             height: auto;
             object-fit: contain;
             object-position: center;
+            transition: 0.3s;
           }
 
           &:empty {
