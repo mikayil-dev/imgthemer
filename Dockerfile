@@ -1,7 +1,7 @@
 # 1) Build lutgen CLI
 FROM rust AS lutgen-builder
 
-RUN cargo install lutgen-cli
+RUN cargo install lutgen-cli --version 1.0.1
 
 # 2) Build Astro app + install deps
 FROM node:22-slim AS builder
