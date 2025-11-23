@@ -2,6 +2,7 @@
 import BaseLayout from '@layouts/BaseLayout.astro';
 import Hero from '@sections/Hero.astro';
 import ContentImage from '@sections/ContentImage.astro';
+import Faq from '@sections/Faq.astro';
 
 const h1 = 'Theme your images effortlessly';
 const copy =
@@ -13,6 +14,7 @@ const textAlign = 'start';
 
 <BaseLayout>
   <Hero {h1} {copy} {eyebrow} {ctaText} {textAlign} />
+
   <ContentImage>
     <h2 slot="title" class="heading">How does it work?</h2>
     <p slot="content" class="text">
@@ -40,6 +42,8 @@ const textAlign = 'start';
       image, it's permanently deleted from our servers.
     </p>
   </ContentImage>
+
+  <Faq />
 </BaseLayout>
 
 <style lang="scss">

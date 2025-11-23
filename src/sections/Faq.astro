@@ -1,0 +1,147 @@
+---
+import Accordion from '@components/Accordion.astro';
+---
+
+<section class="accordion-section">
+  <h2 class="section-heading">FAQ</h2>
+
+  <Accordion>
+    <h3 slot="accordion-title">How do I upload an image?</h3>
+    <p slot="accordion-content">
+      Uploading an image is simple! Just click on the "Upload Image" button on
+      the homepage, select the image file from your device, and choose your
+      desired theme from the dropdown menu. ImgThemer will immeidiately process
+      your image and provide you with a preview of the themed version.
+    </p>
+  </Accordion>
+
+  <Accordion>
+    <h3 slot="accordion-title">How do I choose a theme?</h3>
+    <p slot="accordion-content">
+      Choosing a theme is easy! Simply browse through our extensive collection
+      of themes inspired by popular code editors and color schemes. Once you
+      find a theme you like, select it from the dropdown menu after uploading
+      your image. You can preview the themed image before downloading it to
+      ensure it meets your expectations.
+    </p>
+  </Accordion>
+
+  <Accordion>
+    <h3 slot="accordion-title">How long does it take to theme an image?</h3>
+    <p slot="accordion-content">
+      The time it takes to theme an image depends on several factors, including
+      the size of the image and the complexity of the chosen theme. However,
+      most images can be themed in just a few seconds. Once you've uploaded your
+      image and selected a theme, you'll be able to preview the themed image
+      almost instantly.
+    </p>
+  </Accordion>
+
+  <Accordion>
+    <h3 slot="accordion-title">Is ImgThemer free to use?</h3>
+    <p slot="accordion-content">
+      Yes, ImgThemer is completely free to use! You can upload and theme as many
+      images as you like without any cost. We believe that everyone should have
+      access to high-quality image theming tools, regardless of their budget.
+    </p>
+  </Accordion>
+
+  <Accordion>
+    <h3 slot="accordion-title">Can I use ImgThemer for commercial projects?</h3>
+    <p slot="accordion-content">
+      Yes, you can use ImgThemer for both personal and commercial projects.
+      Whether you're creating content for your blog, social media, or a client,
+      ImgThemer provides a quick and easy way to enhance your images with
+      professional-looking themes. We only ask that you respect our terms of
+      service and do not use the platform for any illegal or unethical purposes.
+      Please credit ImgThemer when using images commercially.
+    </p>
+  </Accordion>
+
+  <Accordion>
+    <h3 slot="accordion-title">What image formats are supported?</h3>
+    <p slot="accordion-content">
+      ImgThemer supports a wide range of image formats, including JPEG, PNG,
+      BMP, and TIFF. This ensures that you can upload and theme images from
+      various sources without any compatibility issues.
+    </p>
+  </Accordion>
+
+  <Accordion>
+    <h3 slot="accordion-title">What is a LUT?</h3>
+    <p slot="accordion-content">
+      A LUT, or Look-Up Table, is a mathematical formula used to map one set of
+      colors to another. In image processing, LUTs are commonly used to apply
+      color grading and effects to images and videos. By using a LUT, you can
+      quickly and easily change the overall look and feel of an image without
+      having to manually adjust each individual color.
+    </p>
+  </Accordion>
+
+  <Accordion>
+    <h3 slot="accordion-title">How do LUTs work?</h3>
+    <p slot="accordion-content">
+      LUTs work by mapping input color values to output color values based on
+      predefined transformations. When you apply a LUT to an image, each pixel's
+      color is adjusted according to the LUT's mapping, resulting in a new color
+      scheme that reflects the desired theme or effect. This process allows for
+      consistent and efficient color grading across the entire image.
+    </p>
+  </Accordion>
+
+  <Accordion>
+    <h3 slot="accordion-title">Are there any limitations on image size?</h3>
+    <p slot="accordion-content">
+      While ImgThemer supports a variety of image sizes, we recommend uploading
+      images that are no larger than 10MB for optimal performance. Larger images
+      may take longer to process and could potentially lead to timeouts or
+      errors. If you have a particularly large image, consider resizing it
+      before uploading to ensure a smooth experience. Currently, the maximum
+      file size allowed is 15MB.
+    </p>
+  </Accordion>
+
+  <Accordion>
+    <h3 slot="accordion-title">Can I use ImgThemer on mobile devices?</h3>
+    <p slot="accordion-content">
+      Yes, ImgThemer is designed to be fully responsive and works seamlessly on
+      mobile devices, including smartphones and tablets. You can upload images,
+      select themes, and download your themed images directly from your mobile
+      browser.
+    </p>
+  </Accordion>
+
+  <Accordion>
+    <h3 slot="accordion-title">Can I create my own themes?</h3>
+    <p slot="accordion-content">
+      Currently, ImgThemer does not support custom theme creation. However, we
+      are constantly working to expand our theme library and may consider adding
+      this feature in the future. Stay tuned for updates!
+    </p>
+  </Accordion>
+
+  <Accordion>
+    <h3 slot="accordion-title">How secure is my data?</h3>
+    <p slot="accordion-content">
+      We take your privacy and data security very seriously. All image
+      processing is done on our secure servers, and we do not store any of your
+      images or personal data. Once you've been served your themed image, it's
+      permanently deleted from our servers.
+    </p>
+  </Accordion>
+</section>
+
+<style lang="scss">
+  .accordion-section {
+    max-width: 850px;
+    margin: 0 auto;
+
+    .section-heading {
+      text-align: center;
+    }
+
+    h3 {
+      @include h4;
+    }
+  }
+</style>

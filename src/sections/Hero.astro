@@ -41,6 +41,7 @@ const {
   const imgWrapperModified = document.querySelector(
     '.modified-container .img-wrapper',
   );
+  const downloadBtn = document.getElementById('download-btn');
 
   uploadBtn?.addEventListener('click', (e) => {
     e.preventDefault();
@@ -93,6 +94,10 @@ const {
 
     if (!themeSelect.value && originalFile) {
       outputFile(originalFile, imgWrapperModified);
+      if (downloadBtn instanceof HTMLAnchorElement) {
+        downloadBtn.href = '#';
+        downloadBtn.tabIndex = -1;
+      }
     }
 
     if (themeSelect.value) {
@@ -111,6 +116,12 @@ const {
             type: blob.type,
           });
           outputFile(modifiedFile, imgWrapperModified);
+
+          if (downloadBtn instanceof HTMLAnchorElement) {
+            const url = URL.createObjectURL(blob);
+            downloadBtn.href = url;
+            downloadBtn.tabIndex = 0;
+          }
         })
         .catch((error) => {
           console.error('Error modifying image:', error);
@@ -204,6 +215,16 @@ const {
           </select>
           <Chevron />
         </div>
+
+        <a
+          class="primary-btn"
+          id="download-btn"
+          href="#"
+          download="modified-image"
+          tabindex="-1"
+        >
+          Download Image
+        </a>
       </div>
     </div>
   </div>
@@ -318,6 +339,7 @@ const {
           display: flex;
           justify-content: center;
           align-items: center;
+          position: relative;
 
           &::after {
             transition: 0.3s;
@@ -337,8 +359,6 @@ const {
           }
 
           &.loading {
-            position: relative;
-
             &::after {
               opacity: 1;
             }
@@ -391,6 +411,18 @@ const {
 
             svg {
               color: var(--primary);
+            }
+          }
+
+          #download-btn {
+            margin-top: 1.5rem;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s;
+
+            &:not([href='#']) {
+              opacity: 1;
+              pointer-events: auto;
             }
           }
         }
