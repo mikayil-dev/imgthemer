@@ -8,9 +8,9 @@ FROM node:22-slim AS builder
 
 WORKDIR /app
 
-# 1. Install deps (these will be re-used in runtime)
+# 1. Copy deps from runner
 COPY package*.json ./
-RUN npm ci
+COPY node_modules ./node_modules
 
 # 2. Build Astro
 COPY . .
