@@ -105,6 +105,24 @@
   }
 }
 
+@mixin h1-article {
+  @include font-heading;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 3.5rem;
+  line-height: 1.2;
+  text-wrap: balance;
+  @content;
+
+  @include view-desktop-xs {
+    font-size: 3rem;
+  }
+
+  @include view-mobile {
+    font-size: 2.2rem;
+  }
+}
+
 @mixin h2 {
   @include font-heading;
   font-style: normal;
