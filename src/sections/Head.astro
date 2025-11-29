@@ -72,13 +72,17 @@ const finalTitle = title
   <script src="/src/assets/scripts/main.ts"></script>
 
   <!-- Analytics -->
-  <script
-    is:inline
-    defer
-    src="/scripts/secondary.js"
-    data-host-url={config.analytics.hostUrl}
-    data-website-id={config.analytics.id}></script>
-
+  {
+    !import.meta.env.DEV && (
+      <script
+        is:inline
+        defer
+        src="/scripts/secondary.js"
+        data-host-url={config.analytics.hostUrl}
+        data-website-id={config.analytics.id}
+      />
+    )
+  }
   <!-- Adsense -->
   <meta
     name="google-adsense-account"
