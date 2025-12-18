@@ -84,15 +84,22 @@ const finalTitle = title
     )
   }
   <!-- Adsense -->
-  <meta
-    name="google-adsense-account"
-    content={`ca-pub-${config.adSense.publisherId}`}
-  />
-  <script
-    is:inline
-    async
-    src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-${config.adSense.publisherId}`}
-    crossorigin="anonymous"></script>
+  {
+    config.adSense.enabled && (
+      <>
+        <meta
+          name="google-adsense-account"
+          content={`ca-pub-${config.adSense.publisherId}`}
+        />
+        <script
+          is:inline
+          async
+          src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-${config.adSense.publisherId}`}
+          crossorigin="anonymous"
+        />
+      </>
+    )
+  }
 
   <!-- Slot -->
   <slot />
