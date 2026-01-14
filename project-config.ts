@@ -39,8 +39,8 @@ export default {
   },
   // Umami Analytics Configuration
   analytics: {
-    hostUrl: (import.meta.env.ANALYTICS_HOST_URL as string) ?? '',
-    id: (import.meta.env.ANALYTICS_ID as string) ?? '',
+    hostUrl: 'https://hello.mikayil.dev',
+    id: 'd7ee7302-08fb-4898-aefd-9fc6a97d960d',
   },
   head: {
     // Default Values for Head Metadata
