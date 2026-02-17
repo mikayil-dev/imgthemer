@@ -6,4 +6,4 @@ services:
     container_name: imgthemer
     restart: unless-stopped
     ports:
-      - "4321:4321"
+      - "127.0.0.1:4321:4321"
