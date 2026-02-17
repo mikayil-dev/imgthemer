@@ -44,6 +44,7 @@ jobs:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: 2222
           script: |
             IMAGE_NAME="ghcr.io/${{ github.repository_owner }}/imgthemer"
 
