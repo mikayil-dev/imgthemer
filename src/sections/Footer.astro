@@ -61,6 +61,15 @@ import Top from '~icons/lucide/arrow-up-from-line';
     <p class="copyright">
       &copy; {new Date().getFullYear()} Mikayil Gacek
     </p>
+    <p class="credit">
+      Made with <span role="img" aria-label="love">❤️</span> by
+      <a
+        href="https://pikcode.de"
+        title="Designed and built with care by PikCode"
+        target="_blank"
+        rel="noopener">PikCode <span class="pik" aria-hidden="true">♠</span></a
+      >
+    </p>
   </div>
 </footer>
 
@@ -174,6 +183,24 @@ import Top from '~icons/lucide/arrow-up-from-line';
       a {
         text-decoration: underline;
         color: var(--primary);
+      }
+
+      .credit {
+        .pik {
+          color: #d1121b;
+          font-variant-emoji: text;
+          display: inline-block;
+          text-decoration: none;
+          transition: transform 0.2s;
+        }
+
+        a {
+          @include hover {
+            .pik {
+              transform: scale(1.2);
+            }
+          }
+        }
       }
     }
   }
