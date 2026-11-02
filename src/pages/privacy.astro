@@ -1,0 +1,136 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+---
+
+<BaseLayout
+  title="Privacy policy"
+  description="How ImgThemer handles your images and personal data: conversion on a server in Germany, no image storage, your saved theme and cookieless Umami analytics."
+>
+  <section>
+    <h1 class="section-heading">Privacy policy</h1>
+
+    <p class="date">Last updated: 3 November 2026</p>
+
+    <p>
+      ImgThemer is a free hobby project. It sets no cookies and loads fonts,
+      images and scripts from its own server in Germany. Your images are only
+      used to create the themed version you asked for and are never kept. Apart
+      from the providers named below, nothing is passed to third parties such as
+      Google, ad networks or social networks.
+    </p>
+
+    <h2>Who is responsible</h2>
+    <p>
+      Mikayil Gacek<br />
+      Mühlstr. 32<br />
+      65760 Eschborn, Germany<br />
+      Email: <a href="mailto:mikayil_gacek@icloud.com"
+        >mikayil_gacek@icloud.com</a
+      >
+    </p>
+
+    <h2>Hosting</h2>
+    <p>
+      ImgThemer runs on a server of Hetzner Online GmbH, Industriestr. 25, 91710
+      Gunzenhausen, Germany, in a data centre in Germany. To deliver a page, the
+      server processes technically necessary connection data such as your IP
+      address, the date and time of the request, the requested page, the
+      referring page and information about your browser and operating system.
+      The web server keeps no log of page views. The legal basis is my
+      legitimate interest in delivering this website securely and reliably (Art.
+      6(1)(f) GDPR).
+    </p>
+
+    <h2>Your images</h2>
+    <p>
+      Choosing an image only shows a preview in your browser. When you pick a
+      palette, the image and its file name are sent over an encrypted connection
+      to the server, converted there and sent back to your browser. This happens
+      again for every palette you try. The original and the converted file exist
+      on the server only during the conversion and are deleted right after it.
+      Nobody looks at them, and they are not passed on or used for anything
+      else. Please only upload images you are allowed to use. The legal basis is
+      providing the service you asked for (Art. 6(1)(b) GDPR).
+    </p>
+
+    <h2>Your theme setting</h2>
+    <p>
+      ImgThemer saves whether dark mode is on in your browser's local storage (<code
+        >dark-mode</code
+      >). It does this when you use the theme switch, and on your first visit
+      when your device is set to a dark theme, so the page keeps that look. The
+      value never leaves your browser, and you can delete it in your browser
+      settings at any time. It is used for nothing but showing the page in the
+      right theme (Section 25(2) no. 2 TDDDG).
+    </p>
+
+    <h2>Analytics with Umami</h2>
+    <p>
+      To see how ImgThemer is used, I use the open-source software Umami. It
+      runs on my own server in Germany, sets no cookies and creates no profiles
+      across websites. It records the page viewed with its title and time, the
+      referring page, browser, operating system, device type, screen size,
+      language and the approximate location (country, region, city). From your
+      IP address and browser details Umami computes an ID that changes every
+      month, so repeat visits within a month count once. For each conversion the
+      server also reports to Umami whether it started, finished or failed, with
+      a random ID, the file type and the chosen palette; for a failure also the
+      reason, the file size if the file was too large, or the submitted palette
+      name if it was invalid. With these reports the server passes on your
+      browser's user agent and the referring page, but never the image itself.
+      Your IP address is processed only briefly and is not stored. The analytics
+      data is deleted automatically 24 months after it was collected. The legal
+      basis is my legitimate interest in a privacy-friendly evaluation and
+      improvement of this website (Art. 6(1)(f) GDPR).
+    </p>
+
+    <h2>Contact by email</h2>
+    <p>
+      If you write to me by email, your address and message are stored in my
+      mailbox at Apple iCloud, run by Apple Distribution International Ltd.,
+      Hollyhill Industrial Estate, Cork, Ireland. Apple may also store them in
+      the USA and bases such transfers on the EU Standard Contractual Clauses. I
+      use your address and message only to answer you and delete them once your
+      request is settled, unless the law requires me to keep them. The legal
+      basis is my legitimate interest in answering your request (Art. 6(1)(f)
+      GDPR).
+    </p>
+
+    <h2>Links to other websites</h2>
+    <p>
+      Links to GitHub, X and other websites are plain links. Data only reaches
+      these services when you click a link, and from then on their own privacy
+      policies apply.
+    </p>
+
+    <h2>Your rights</h2>
+    <p>
+      You have the right to access your data, to have it corrected or erased, to
+      restrict its processing, to data portability and to object to processing
+      based on legitimate interests (Art. 15 to 18, 20 and 21 GDPR). Just write
+      to the email address above. You can also complain to a data protection
+      supervisory authority, for example the one responsible for me: Der
+      Hessische Beauftragte für Datenschutz und Informationsfreiheit,
+      Gustav-Stresemann-Ring 1, 65189 Wiesbaden, Germany.
+    </p>
+  </section>
+</BaseLayout>
+
+<style lang="scss">
+  section {
+    max-width: 800px;
+
+    h2 {
+      margin-top: 2.5rem;
+      margin-bottom: 1rem;
+    }
+
+    p {
+      margin-bottom: 1rem;
+    }
+
+    a {
+      color: var(--primary);
+    }
+  }
+</style>
