@@ -1,4 +1,4 @@
-import { type ExecException, exec } from 'child_process';
+import { execFile } from 'child_process';
 import { createReadStream, createWriteStream, unlink } from 'fs';
 import { pipeline } from 'stream/promises';
 import { palettes } from '@assets/scripts/palettes';
@@ -9,9 +9,14 @@ export const prerender = false;
 
 const MAX_FILE_SIZE = 15 * 1024 * 1024; // 15MB
 
-function execAsync(cmd: string): Promise<ExecException | null | string> {
+// Image types lutgen can read. The type comes from the client, so it is checked
+// against this list before it becomes part of a file name.
+const FILE_TYPE = /^image\/(png|jpe?g|webp|gif|bmp|tiff)$/;
+
+// Runs a program without a shell, so no argument can inject commands.
+function execFileAsync(file: string, args: string[]): Promise<string> {
   return new Promise((resolve, reject) => {
-    exec(cmd, (err, stdout) => {
+    execFile(file, args, (err, stdout) => {
       if (err) {
         reject(err);
       } else {
@@ -69,8 +74,26 @@ export const POST: APIRoute = async ({ request }) => {
     });
   }
 
+  const fileType = FILE_TYPE.exec(file.type)?.[1];
+  if (!fileType) {
+    void trackUmamiEvent(
+      {
+        url: '/api/img',
+        name: 'img_conversion_failed',
+        data: { reason: 'unsupported_file_type' },
+      },
+      request,
+    );
+    return new Response(
+      JSON.stringify({
+        message:
+          'Unsupported file type. Use PNG, JPEG, WebP, GIF, BMP or TIFF.',
+      }),
+      { status: 415 },
+    );
+  }
+
   const originalId = crypto.randomUUID();
-  const fileType = file.type.split('/').pop();
   const originalFilePath = `/tmp/${originalId}.${fileType}`;
 
   void trackUmamiEvent(
@@ -82,15 +105,19 @@ export const POST: APIRoute = async ({ request }) => {
     request,
   );
 
-  await pipeline(file.stream(), createWriteStream(originalFilePath));
+  const modifiedFilePath = `/tmp/${crypto.randomUUID()}.${fileType}`;
 
   try {
-    const modifiedId = crypto.randomUUID();
-    const modifiedFilePath = `/tmp/${modifiedId}.${fileType}`;
+    await pipeline(file.stream(), createWriteStream(originalFilePath));
 
-    await execAsync(
-      `lutgen apply --palette ${theme} ${originalFilePath} --output ${modifiedFilePath}`,
-    );
+    await execFileAsync('lutgen', [
+      'apply',
+      '--palette',
+      theme,
+      originalFilePath,
+      '--output',
+      modifiedFilePath,
+    ]);
 
     const fileStream = createReadStream(modifiedFilePath);
     const webStream = new ReadableStream({
@@ -101,7 +128,11 @@ export const POST: APIRoute = async ({ request }) => {
           unlink(originalFilePath, () => 0);
           unlink(modifiedFilePath, () => 0);
         });
-        fileStream.on('error', (err) => controller.error(err));
+        fileStream.on('error', (err) => {
+          controller.error(err);
+          unlink(originalFilePath, () => 0);
+          unlink(modifiedFilePath, () => 0);
+        });
       },
     });
 
@@ -122,6 +153,8 @@ export const POST: APIRoute = async ({ request }) => {
     });
   } catch (err) {
     console.error('Server error occured while converting Image:\n', err);
+    unlink(originalFilePath, () => 0);
+    unlink(modifiedFilePath, () => 0);
 
     void trackUmamiEvent(
       {
