@@ -134,6 +134,12 @@ export const POST: APIRoute = async ({ request }) => {
           unlink(modifiedFilePath, () => 0);
         });
       },
+      // The visitor closed the connection before the image was sent.
+      cancel() {
+        fileStream.destroy();
+        unlink(originalFilePath, () => 0);
+        unlink(modifiedFilePath, () => 0);
+      },
     });
 
     void trackUmamiEvent(
