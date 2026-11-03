@@ -12,6 +12,5 @@ document.addEventListener('DOMContentLoaded', () => {
     document
       .querySelector('header button.darkmode-toggle')
       ?.setAttribute('data-dark-active', '');
-    localStorage.setItem('dark-mode', 'true');
   }
 });
