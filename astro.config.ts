@@ -17,7 +17,7 @@ export default defineConfig({
   ...(config.adapter === 'node'
     ? { adapter: node({ mode: 'standalone' }) }
     : {}),
-  site: 'https://imgthemer.com',
+  site: 'https://imgthemer.pikcode.de',
   prefetch: {
     defaultStrategy: 'viewport',
     prefetchAll: true,

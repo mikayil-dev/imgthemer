@@ -38,7 +38,7 @@ jobs:
           cache-from: type=registry,ref=ghcr.io/${{ github.repository_owner }}/imgthemer:buildcache
           cache-to: type=registry,ref=ghcr.io/${{ github.repository_owner }}/imgthemer:buildcache,mode=max
 
-      - name: Deploy on VPS (restricted key, vps-app-update imgthemer.com)
+      - name: Deploy on VPS (restricted key, vps-app-update imgthemer.pikcode.de)
         env:
           DEPLOY_KEY: ${{ secrets.DEPLOY_SSH_KEY }}
           KNOWN_HOSTS: ${{ secrets.DEPLOY_KNOWN_HOSTS }}
